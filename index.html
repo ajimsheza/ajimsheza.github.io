@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>তোমার জন্য — For Sheza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Hind+Siliguri:wght@300;400;500&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #c9536a;
+    --rose-light: #f5b8c4;
+    --rose-dark: #8b2d40;
+    --cream: #fdf6f0;
+    --warm: #f9ede8;
+    --gold: #c9953a;
+    --gold-light: #f0d8a8;
+    --text: #2a1a20;
+    --text-soft: #6b4a55;
+    --petal1: #f7c5cf;
+    --petal2: #f9d5dc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Hind Siliguri', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ─── FLOATING PETALS ─── */
+  .petals-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .petal {
+    position: absolute;
+    width: 12px; height: 18px;
+    border-radius: 50% 0 50% 0;
+    opacity: 0;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-40px) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.5; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    background: radial-gradient(ellipse at 60% 40%, #fce8ee 0%, #fdf6f0 60%, #f9ede8 100%);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1.2' fill='%23c9536a' opacity='0.12'/%3E%3C/svg%3E") repeat;
+  }
+  .hero-heart {
+    font-size: 5rem;
+    animation: pulse 2.4s ease-in-out infinite;
+    display: block; margin-bottom: 1.5rem;
+    filter: drop-shadow(0 0 24px #c9536a88);
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
+  .hero-for {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    color: var(--rose);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5rem;
+    opacity: 0; animation: fadeUp 1s 0.3s forwards;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 10vw, 6.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--rose-dark);
+    letter-spacing: -0.02em;
+    opacity: 0; animation: fadeUp 1s 0.6s forwards;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--rose);
+  }
+  .hero-sub {
+    margin-top: 1.4rem;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--text-soft);
+    max-width: 480px;
+    line-height: 1.7;
+    opacity: 0; animation: fadeUp 1s 0.9s forwards;
+  }
+  .scroll-hint {
+    margin-top: 3rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    opacity: 0; animation: fadeUp 1s 1.4s forwards;
+    color: var(--rose); font-size: 0.85rem; letter-spacing: 0.1em;
+  }
+  .scroll-hint span { animation: bounce 1.6s ease-in-out infinite; display: block; font-size: 1.5rem; }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SECTION BASE ─── */
+  section { position: relative; z-index: 1; padding: 5rem 1.5rem; }
+  .section-label {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.1rem; color: var(--rose);
+    text-align: center; letter-spacing: 0.2em;
+    margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    text-align: center; color: var(--rose-dark);
+    margin-bottom: 3.5rem;
+  }
+  .divider {
+    width: 80px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--rose), transparent);
+    margin: 0 auto 3.5rem;
+  }
+
+  /* ─── TIMELINE ─── */
+  .timeline-wrap {
+    max-width: 760px; margin: 0 auto;
+    position: relative;
+  }
+  .timeline-wrap::before {
+    content: '';
+    position: absolute; left: 50%; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--rose-light) 10%, var(--rose-light) 90%, transparent);
+    transform: translateX(-50%);
+  }
+  .tl-item {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transition: opacity 0.7s, transform 0.7s;
+  }
+  .tl-item:nth-child(odd) { flex-direction: row; }
+  .tl-item:nth-child(even) { flex-direction: row-reverse; }
+  .tl-item.visible { opacity: 1; transform: none !important; }
+  .tl-item:nth-child(odd)  { transform: translateX(-30px); }
+  .tl-item:nth-child(even) { transform: translateX(30px); }
+
+  .tl-card {
+    flex: 1;
+    background: #fff;
+    border: 1px solid var(--rose-light);
+    border-radius: 18px;
+    padding: 1.5rem 1.8rem;
+    box-shadow: 0 4px 32px #c9536a18;
+    position: relative;
+  }
+  .tl-card::after {
+    content: '';
+    position: absolute; top: 50%; right: -10px;
+    border: 5px solid transparent;
+    border-left-color: var(--rose-light);
+    transform: translateY(-50%);
+  }
+  .tl-item:nth-child(even) .tl-card::after {
+    right: auto; left: -10px;
+    border-left-color: transparent;
+    border-right-color: var(--rose-light);
+  }
+  .tl-month {
+    font-family: 'Dancing Script', cursive;
+    font-size: 0.95rem;
+    color: var(--rose);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.08em;
+  }
+  .tl-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--rose-dark);
+    margin-bottom: 0.6rem;
+  }
+  .tl-text {
+    font-size: 0.95rem;
+    color: var(--text-soft);
+    line-height: 1.75;
+  }
+
+  .tl-dot {
+    flex: 0 0 42px;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding-top: 1.5rem;
+  }
+  .tl-dot span {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--rose), var(--rose-dark));
+    border: 4px solid #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 0 0 4px var(--rose-light), 0 4px 16px #c9536a44;
+  }
+
+  /* ─── LOVE LETTER ─── */
+  .letter-section {
+    background: linear-gradient(135deg, #fff5f7 0%, #fdf6f0 100%);
+    border-top: 1px solid var(--rose-light);
+    border-bottom: 1px solid var(--rose-light);
+  }
+  .letter-card {
+    max-width: 680px; margin: 0 auto;
+    background: #fff;
+    border-radius: 24px;
+    padding: 3rem 3.5rem;
+    box-shadow: 0 8px 60px #c9536a20;
+    position: relative;
+    border: 1px solid var(--rose-light);
+  }
+  .letter-card::before {
+    content: '❝';
+    position: absolute; top: -0.5rem; left: 2rem;
+    font-size: 5rem;
+    color: var(--rose-light);
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+  }
+  .letter-text {
+    font-size: 1.05rem;
+    line-height: 2;
+    color: var(--text-soft);
+    text-align: center;
+  }
+  .letter-text strong { color: var(--rose-dark); }
+  .letter-sign {
+    margin-top: 2rem;
+    text-align: right;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.6rem;
+    color: var(--rose);
+  }
+
+  /* ─── PROMISE ─── */
+  .promise-section {
+    text-align: center;
+    background: linear-gradient(160deg, var(--rose-dark) 0%, #6b1a2a 100%);
+    color: #fff;
+    padding: 6rem 1.5rem;
+  }
+  .promise-section .section-label { color: var(--rose-light); }
+  .promise-section .section-title { color: #fff; }
+  .promise-section .divider { background: linear-gradient(90deg, transparent, #fff5, transparent); }
+  .promise-grid {
+    max-width: 700px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 540px) { .promise-grid { grid-template-columns: 1fr; } }
+  .promise-card {
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 18px;
+    padding: 1.8rem 1.5rem;
+    backdrop-filter: blur(4px);
+    transition: transform 0.3s, background 0.3s;
+  }
+  .promise-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.15); }
+  .promise-card .icon { font-size: 2rem; margin-bottom: 0.7rem; }
+  .promise-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .promise-card p { font-size: 0.9rem; opacity: 0.82; line-height: 1.65; }
+
+  /* ─── FINAL ─── */
+  .final-section {
+    text-align: center; padding: 6rem 1.5rem 4rem;
+    background: radial-gradient(ellipse at 40% 60%, #fce8ee 0%, #fdf6f0 70%);
+  }
+  .big-heart {
+    font-size: 6rem;
+    display: block; margin: 0 auto 1.5rem;
+    animation: pulse 2.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px #c9536a88);
+  }
+  .final-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    color: var(--rose-dark);
+  }
+  .final-name em { font-style: italic; color: var(--rose); }
+  .final-sub {
+    margin-top: 1rem;
+    font-size: 1.1rem; color: var(--text-soft);
+    line-height: 1.8;
+    max-width: 480px; margin: 1rem auto 0;
+  }
+  .footer {
+    text-align: center; padding: 2rem;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1rem; color: var(--rose);
+    opacity: 0.7;
+  }
+
+  /* ─── RESPONSIVE TIMELINE ─── */
+  @media (max-width: 620px) {
+    .timeline-wrap::before { left: 20px; }
+    .tl-item, .tl-item:nth-child(even) { flex-direction: column !important; padding-left: 52px; }
+    .tl-dot { position: absolute; left: 0; padding-top: 0; }
+    .tl-item { position: relative; }
+    .tl-card::after, .tl-item:nth-child(even) .tl-card::after { display: none; }
+    .letter-card { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PETALS -->
+<div class="petals-bg" id="petals"></div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <span class="hero-heart">🌸</span>
+  <p class="hero-for">একটি চিঠি — শুধু তোমার জন্য</p>
+  <h1 class="hero-title">তোমাকে ভালোবাসি<br><em>Sheza</em></h1>
+  <p class="hero-sub">
+    কিছু গল্প শুরু হয় চোখের এক পলকেই — তোমার গল্পটা ঠিক সেরকমই ছিল।
+  </p>
+  <div class="scroll-hint">
+    <small>নিচে স্ক্রল করো</small>
+    <span>↓</span>
+  </div>
+</section>
+
+<!-- ═══ TIMELINE ═══ -->
+<section id="timeline">
+  <p class="section-label">আমাদের গল্প</p>
+  <h2 class="section-title">যেভাবে শুরু হয়েছিল</h2>
+  <div class="divider"></div>
+
+  <div class="timeline-wrap">
+
+    <!-- JUNE 2025 -->
+    <div class="tl-item">
+      <div class="tl-card">
+        <p class="tl-month">জুন ২০২৫</p>
+        <p class="tl-heading">প্রথম দেখা 👀</p>
+        <p class="tl-text">কুরবানির ঈদের আগে, তুমি আর তোমার আম্মু চৌমুহানের রাস্তা দিয়ে বাড়ির দিকে আসছিলে। আমি ভ্যানে করে নগর যাচ্ছিলাম। সেদিনই তোমাকে প্রথম একটু ভালো লেগে যায়।</p>
+      </div>
+      <div class="tl-dot"><span>🌸</span></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <div class="tl-item">
+      <div style="flex:1"></div>
+      <div class="tl-dot"><span>🔍</span></div>
+      <div class="tl-card">
+        <p class="tl-month">জুন ২০২৫</p>
+        <p class="tl-heading">খোঁজার শুরু</p>
+        <p class="tl-text">সেদিনের পর থেকে তোমাকে খোঁজা শুরু হয়। ভাগ্যক্রমে আমরা দুজন একসাথে ভ্যানেই যাই — আবার দেখা পাই তোমাকে।</p>
+      </div>
+    </div>
+
+    <!-- SEP 2025 -->
+    <div class="tl-item">
+      <div class="tl-card">
+        <p class="tl-month">সেপ্টেম্বর ২০২৫</p>
+        <p class="tl-heading">বিজ্ঞান মেলায় 🔬</p>
+        <p class="tl-text">সেদিন তোমাকে অনেক ভালো লেগেছিল। কেন জানি না — তোমাকে অনেক সুন্দর লাগছিল। মন চাইছিল তোমার সাথে গিয়ে কথা বলি, কিন্তু তুমি আমাকে চিনবে কি না জানতাম না।</p>
+      </div>
+      <div class="tl-dot"><span>✨</span></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <div class="tl-item">
+      <div style="flex:1"></div>
+      <div class="tl-dot"><span>💡</span></div>
+      <div class="tl-card">
+        <p class="tl-month">সেপ্টেম্বর ২০২৫</p>
+        <p class="tl-heading">নাম জানলাম</p>
+        <p class="tl-text">তোমার নাম বাবলি জানতাম। কিন্তু স্কুলে সেই নামে কাউকে পেলাম না। তারপর তোমার এক সহপাঠীর কাছ থেকে জানলাম — আসল নাম <strong>Sheza</strong>।</p>
+      </div>
+    </div>
+
+    <!-- OCT 2025 -->
+    <div class="tl-item">
+      <div class="tl-card">
+        <p class="tl-month">অক্টোবর ২০২৫</p>
+        <p class="tl-heading">প্রথম প্রপোজাল 💌</p>
+        <p class="tl-text">মহিমাকে দিয়ে প্রপোজ করলাম। জানতাম না লিখন আর তুমি একসাথে পড়ো। একটাই আফসোস — যদি তোমাকে আরও কিছুদিন আগে দেখতাম, তাহলে তুমি হয়তো আমার জীবনে পুরোপুরি থাকতে এতদিনে।</p>
+      </div>
+      <div class="tl-dot"><span>💐</span></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <div class="tl-item">
+      <div style="flex:1"></div>
+      <div class="tl-dot"><span>📩</span></div>
+      <div class="tl-card">
+        <p class="tl-month">অক্টোবর ২০২৫</p>
+        <p class="tl-heading">তোমার উত্তর</p>
+        <p class="tl-text">মহিমার বন্ধু জেনি আমাকে বলেছিল তুমি আমাকে চিনো। তবে বললে — এসএসসির পরে যোগাযোগ করতে।</p>
+      </div>
+    </div>
+
+    <!-- NOV 2025 -->
+    <div class="tl-item">
+      <div class="tl-card">
+        <p class="tl-month">নভেম্বর ২০২৫</p>
+        <p class="tl-heading">দ্বিতীয়বার চেষ্টা 🕊️</p>
+        <p class="tl-text">এবার লিখনকে জানালাম। আবার প্রপোজাল পাঠালাম। লিখন আমাকে জানাল — তুমি রাজি আছো।</p>
+      </div>
+      <div class="tl-dot"><span>🕊️</span></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <div class="tl-item">
+      <div style="flex:1"></div>
+      <div class="tl-dot"><span>🤍</span></div>
+      <div class="tl-card">
+        <p class="tl-month">নভেম্বর ২০২৫</p>
+        <p class="tl-heading">ঢাকা যাওয়া</p>
+        <p class="tl-text">আমি অনেক হাসিমুখে ঢাকায় গেলাম। তোমাকে ফোন নম্বর দিয়ে গিয়েছিলাম। তোমার ফোনের অপেক্ষায় দিন কাটতে থাকল।</p>
+      </div>
+    </div>
+
+    <!-- FEB 2026 -->
+    <div class="tl-item">
+      <div class="tl-card">
+        <p class="tl-month">ফেব্রুয়ারি ২০২৬</p>
+        <p class="tl-heading">প্রথমবার কথা হলো 📞</p>
+        <p class="tl-text">তোমার সাথে প্রথমবার কথা বললাম — আর তোমার প্রতি আমার ভালো লাগা ও সম্মান প্রথম দিনেই অনেক বেড়ে গেল। তোমাকে আমি যতটা বুদ্ধিমান ভেবেছিলাম, তুমি তার চেয়ে অনেক বেশি বুদ্ধিমান ও বাস্তববাদী।</p>
+      </div>
+      <div class="tl-dot"><span>📞</span></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <div class="tl-item">
+      <div style="flex:1"></div>
+      <div class="tl-dot"><span>💍</span></div>
+      <div class="tl-card">
+        <p class="tl-month">১২ই ফেব্রুয়ারি ২০২৬</p>
+        <p class="tl-heading">বিয়ের প্রস্তাব 💍</p>
+        <p class="tl-text">তোমার সাথে প্রথমবার কথা বলেই সিদ্ধান্ত নিয়ে নিলাম — তোমাকেই বিয়ে করব। অনেক মেয়ের সাথেই দেখা হয়, কথা হয় — কিন্তু তোমার প্রতি ভালো লাগাটা আলাদা ছিল। এটা আল্লাহর ইচ্ছাই।</p>
+      </div>
+    </div>
+
+    <!-- MARCH 2026 -->
+    <div class="tl-item">
+      <div class="tl-card">
+        <p class="tl-month">মার্চ ২০২৬</p>
+        <p class="tl-heading">তুমি রাজি হলে 🌺</p>
+        <p class="tl-text">তুমি রাজি হলে। আমাকে জানালে — তুমি আমার জন্য অপেক্ষা করছ। মিশ্র অনুভূতি নিয়ে ঢাকায় ফিরে এলাম, কিন্তু মনে অনেক আশা।</p>
+      </div>
+      <div class="tl-dot"><span>🌺</span></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- MAY 2026 -->
+    <div class="tl-item">
+      <div style="flex:1"></div>
+      <div class="tl-dot"><span>🎀</span></div>
+      <div class="tl-card">
+        <p class="tl-month">মে ২০২৬</p>
+        <p class="tl-heading">এখন আমরা এখানে আছি ✨</p>
+        <p class="tl-text">আমরা এখন এখানে আছি। তোমাকে বিয়ে করে বউ বানিয়েই ছাড়ব — কথা দিলাম।</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ LOVE LETTER ═══ -->
+<section class="letter-section">
+  <p class="section-label">মনের কথা</p>
+  <h2 class="section-title">তোমাকে একটু বলতে চাই</h2>
+  <div class="divider"></div>
+  <div class="letter-card">
+    <p class="letter-text">
+      Sheza, তুমি জানো না — এক মুহূর্তের দেখায় কত বড় গল্প শুরু হয়ে গিয়েছিল।
+      সেই ভ্যানের রাস্তায়, বিজ্ঞান মেলায়, খোঁজার সেই দিনগুলোতে — প্রতিটি মুহূর্তে
+      তুমি অজান্তেই আমার মনে জায়গা করে নিচ্ছিলে।<br><br>
+      তোমার সাথে প্রথমবার কথা বলেই বুঝেছিলাম — <strong>এই মেয়েটিই আমার জন্য।</strong>
+      তোমার বুদ্ধিমত্তা, তোমার বাস্তববাদী চিন্তা, তোমার শান্ত স্বভাব —
+      সব মিলিয়ে তুমি এমন কেউ যাকে আমি সারাজীবনের সঙ্গী হিসেবে চাই।<br><br>
+      ইনশাআল্লাহ, সেদিন আসবে।
+    </p>
+    <p class="letter-sign">— তোমার জন্যই অপেক্ষায় আছি ❤️</p>
+  </div>
+</section>
+
+<!-- ═══ PROMISES ═══ -->
+<section class="promise-section">
+  <p class="section-label">প্রতিশ্রুতি</p>
+  <h2 class="section-title">তোমাকে যা দিতে চাই</h2>
+  <div class="divider"></div>
+  <div class="promise-grid">
+    <div class="promise-card">
+      <div class="icon">🤝</div>
+      <h3>বিশ্বাস</h3>
+      <p>সবসময় সত্য কথা বলব, কখনো তোমার বিশ্বাস ভাঙব না।</p>
+    </div>
+    <div class="promise-card">
+      <div class="icon">🛡️</div>
+      <h3>নিরাপত্তা</h3>
+      <p>সুখে-দুখে সবসময় তোমার পাশে থাকব।</p>
+    </div>
+    <div class="promise-card">
+      <div class="icon">🌱</div>
+      <h3>সম্মান</h3>
+      <p>তোমার স্বপ্ন, তোমার চিন্তাকে সবসময় সম্মান করব।</p>
+    </div>
+    <div class="promise-card">
+      <div class="icon">🌙</div>
+      <h3>ভবিষ্যৎ</h3>
+      <p>ইনশাআল্লাহ, একদিন একটা সুন্দর ঘর বাঁধব তোমার সাথে।</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINAL ═══ -->
+<section class="final-section">
+  <span class="big-heart">💖</span>
+  <h2 class="final-name">তোমাকে ভালোবাসি<br><em>Sheza</em></h2>
+  <p class="final-sub">
+    এই গল্পের শেষটা সুন্দর হবে — সেটা আমি জানি।<br>
+    কারণ শুরুটা যখন আল্লাহর ইচ্ছায় হয়েছে, শেষটাও তিনিই সুন্দর করবেন।
+  </p>
+</section>
+
+<footer class="footer">
+  তৈরি করা হয়েছে ❤️ দিয়ে — শুধু তোমার জন্য
+</footer>
+
+<script>
+  // ── Petals
+  const petalsEl = document.getElementById('petals');
+  const colors = ['#f5b8c4','#f7c5cf','#f9d5dc','#c9536a','#fce4ea'];
+  for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.cssText = `
+      left: ${Math.random()*100}%;
+      background: ${colors[Math.floor(Math.random()*colors.length)]};
+      width: ${8+Math.random()*10}px;
+      height: ${12+Math.random()*14}px;
+      animation-duration: ${6+Math.random()*10}s;
+      animation-delay: ${Math.random()*10}s;
+      border-radius: ${Math.random()>0.5?'50% 0 50% 0':'0 50% 0 50%'};
+      opacity: 0;
+    `;
+    petalsEl.appendChild(p);
+  }
+
+  // ── Scroll reveal timeline
+  const items = document.querySelectorAll('.tl-item');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.2 });
+  items.forEach(i => obs.observe(i));
+</script>
+</body>
+</html>
