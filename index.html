@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For My Dove</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF3EC;
+    --blush:#E8B7B0;
+    --mauve:#C98A99;
+    --plum:#4B2E39;
+    --sage:#92A889;
+    --gold:#D8AD6D;
+    --ink: var(--plum);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Outfit', sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1,h2,.display{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    letter-spacing:0.01em;
+  }
+  ::selection{ background:var(--blush); color:var(--cream); }
+
+  a, button{ font-family:inherit; }
+
+  :focus-visible{
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  /* ---------- Petals background ---------- */
+  #petals{
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:2;
+    overflow:hidden;
+  }
+  .petal{
+    position:absolute;
+    top:-8vh;
+    left: var(--x);
+    width: var(--size);
+    height: var(--size);
+    opacity:0;
+    animation: fall var(--duration) linear var(--delay) forwards;
+    will-change: transform, opacity;
+  }
+  @keyframes fall{
+    0%{ transform: translate(0,0) rotate(0deg); opacity:0; }
+    6%{ opacity:0.9; }
+    90%{ opacity:0.75; }
+    100%{ transform: translate(var(--drift), 112vh) rotate(var(--rotate)); opacity:0; }
+  }
+
+  /* ---------- Gate ---------- */
+  #gate{
+    position:fixed; inset:0;
+    z-index:10;
+    display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(circle at 50% 30%, #ffffff 0%, var(--cream) 55%, #f3e4da 100%);
+    transition: opacity 1s ease, visibility 1s ease;
+    padding: 24px;
+  }
+  #gate.fade-out{ opacity:0; visibility:hidden; pointer-events:none; }
+
+  .gate-card{
+    text-align:center;
+    max-width: 420px;
+  }
+  .gate-eyebrow{
+    font-size:0.75rem;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color: var(--mauve);
+    margin-bottom: 14px;
+  }
+  .gate-card h1{
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-style: italic;
+    margin: 0 0 28px;
+    color: var(--plum);
+  }
+  #nameForm{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    align-items:center;
+  }
+  #nameInput{
+    width: 100%;
+    max-width: 320px;
+    padding: 14px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--blush);
+    background: #fffdfb;
+    font-size: 1rem;
+    text-align:center;
+    color: var(--plum);
+  }
+  #nameInput::placeholder{ color: #c7a7a2; }
+
+  .gate-btn{
+    padding: 12px 34px;
+    border-radius: 999px;
+    border: 1px solid var(--plum);
+    background: var(--plum);
+    color: var(--cream);
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    cursor:pointer;
+    transition: transform .25s ease, background .25s ease;
+  }
+  .gate-btn:hover{ transform: translateY(-1px); background:#5c3b48; }
+
+  .gate-msg{
+    min-height: 22px;
+    font-size:0.85rem;
+    color: var(--mauve);
+    font-style: italic;
+  }
+
+  .shake{ animation: shake .5s ease; }
+  @keyframes shake{
+    0%,100%{ transform: translateX(0); }
+    20%{ transform: translateX(-8px); }
+    40%{ transform: translateX(8px); }
+    60%{ transform: translateX(-6px); }
+    80%{ transform: translateX(6px); }
+  }
+
+  /* ---------- Story ---------- */
+  #story{
+    position:relative;
+    z-index:1;
+    height:100vh;
+    overflow-y:scroll;
+    scroll-snap-type: y mandatory;
+    scroll-behavior:smooth;
+  }
+  #story.hidden{ display:none; }
+
+  section.snap{
+    scroll-snap-align:start;
+    min-height:100vh;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 12vh 8vw;
+    position:relative;
+  }
+
+  .scroll-hint{
+    position:absolute;
+    bottom: 6vh;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:0.72rem;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color: var(--mauve);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+  }
+  .chev{
+    width:9px; height:9px;
+    border-right:1px solid var(--mauve);
+    border-bottom:1px solid var(--mauve);
+    transform:rotate(45deg);
+    animation: bob 1.8s ease-in-out infinite;
+  }
+  @keyframes bob{
+    0%,100%{ transform: rotate(45deg) translateY(0); }
+    50%{ transform: rotate(45deg) translateY(6px); }
+  }
+
+  /* Rumi section */
+  #s-rumi p.poem{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: clamp(1.15rem, 2.6vw, 1.65rem);
+    line-height:1.8;
+    max-width: 620px;
+    color: var(--plum);
+  }
+  #s-rumi .attrib{
+    margin-top:22px;
+    font-size:0.8rem;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color: var(--mauve);
+  }
+
+  /* Dove section */
+  #s-dove h2{
+    font-size: clamp(2.2rem, 6vw, 3.6rem);
+    font-style: italic;
+    color: var(--plum);
+    max-width: 720px;
+    line-height:1.25;
+  }
+
+  /* Breath section */
+  #s-breath{
+    touch-action: none;
+    user-select:none;
+    cursor:pointer;
+  }
+  .lungs-wrap{
+    width: min(60vw, 260px);
+    height: min(60vw, 260px);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom: 34px;
+  }
+  .lungs{
+    width:100%; height:100%;
+    transform: scale(1);
+    filter: drop-shadow(0 10px 30px rgba(75,46,57,0.18));
+  }
+  #s-breath .instruction{
+    font-size: 0.95rem;
+    letter-spacing:0.04em;
+    color: var(--plum);
+    max-width: 300px;
+  }
+  #s-breath .instruction em{
+    display:block;
+    margin-top:6px;
+    font-size:0.75rem;
+    color: var(--mauve);
+    font-style:italic;
+  }
+  .reveal-text{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    color: var(--plum);
+    margin-top: 26px;
+    opacity:0;
+    transform: translateY(14px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+  }
+  .reveal-text.show{ opacity:1; transform:translateY(0); }
+  #s-breath .instruction.done{ opacity:0; transition:opacity .6s ease; }
+
+  /* Poem section */
+  #s-poem p.poem{
+    font-family:'Fraunces', serif;
+    font-size: clamp(1.05rem, 2.4vw, 1.4rem);
+    line-height:2;
+    max-width: 560px;
+    color: var(--plum);
+    white-space: pre-line;
+  }
+
+  /* Hands section */
+  #s-hands{ overflow:hidden; }
+  .hands-wrap{
+    position:relative;
+    width:min(80vw,420px);
+    height:min(80vw,420px);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hand{
+    position:absolute;
+    top:50%;
+    width: 46%;
+    transition: transform 1.4s cubic-bezier(.2,.8,.2,1);
+  }
+  .hand-left{ left:8%; transform: translate(-140%,-50%) rotate(-8deg); }
+  .hand-right{ right:8%; transform: translate(140%,-50%) rotate(8deg) scaleX(-1); }
+  #s-hands.in-view .hand-left{ transform: translate(-14%,-50%) rotate(-8deg); }
+  #s-hands.in-view .hand-right{ transform: translate(14%,-50%) rotate(8deg) scaleX(-1); }
+
+  .heart-glow{
+    position:absolute;
+    width: 60px; height:60px;
+    border-radius:50%;
+    background: radial-gradient(circle, rgba(216,173,109,0.55), rgba(216,173,109,0));
+    opacity:0;
+    transition: opacity 1.6s ease 1.1s, transform 1.6s ease 1.1s;
+    transform: scale(0.4);
+  }
+  #s-hands.in-view .heart-glow{ opacity:1; transform: scale(1.6); }
+
+  #s-hands .final-text{
+    margin-top: 40px;
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: clamp(1.3rem, 3.4vw, 2rem);
+    color: var(--plum);
+    opacity:0;
+    transform: translateY(10px);
+    transition: opacity 1.4s ease 1.5s, transform 1.4s ease 1.5s;
+  }
+  #s-hands.in-view .final-text{ opacity:1; transform:translateY(0); }
+
+  #s-hands .sub-text{
+    margin-top:10px;
+    font-size:0.85rem;
+    letter-spacing:0.08em;
+    color: var(--mauve);
+    opacity:0;
+    transition: opacity 1.4s ease 2.1s;
+  }
+  #s-hands.in-view .sub-text{ opacity:1; }
+
+  /* Sound toggle */
+  #soundToggle{
+    position:fixed;
+    bottom: 22px; right: 22px;
+    z-index: 20;
+    width:46px; height:46px;
+    border-radius:50%;
+    border:1px solid var(--blush);
+    background: rgba(255,253,251,0.9);
+    color: var(--plum);
+    font-size:1.1rem;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0;
+    transition: opacity .8s ease;
+    backdrop-filter: blur(4px);
+  }
+  #soundToggle.show{ opacity:1; }
+
+  .hidden{ display:none !important; }
+
+  @media (prefers-reduced-motion: reduce){
+    .petal{ animation-duration: 18s !important; }
+    #story{ scroll-behavior:auto; }
+    .chev{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+  <div id="petals"></div>
+
+  <!-- Name gate -->
+  <div id="gate">
+    <div class="gate-card">
+      <div class="gate-eyebrow">a small place, just for you</div>
+      <h1>Before we begin,<br>tell me who you are.</h1>
+      <form id="nameForm" autocomplete="off">
+        <input id="nameInput" type="text" placeholder="Your name" aria-label="Your name">
+        <button type="submit" class="gate-btn">Enter</button>
+        <div class="gate-msg" id="gateMsg" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main story -->
+  <main id="story" class="hidden">
+
+    <section class="snap" id="s-rumi">
+      <p class="poem">"The minute I heard my first love story,<br>
+        I started looking for you, not knowing<br>
+        how blind that was.<br>
+        Lovers don't finally meet somewhere.<br>
+        They're in each other all along."</p>
+      <div class="attrib">— Rumi</div>
+      <div class="scroll-hint">scroll<div class="chev"></div></div>
+    </section>
+
+    <section class="snap" id="s-dove">
+      <h2>Stay with me forever,<br>my dove.</h2>
+      <div class="scroll-hint">scroll<div class="chev"></div></div>
+    </section>
+
+    <section class="snap" id="s-breath">
+      <div class="lungs-wrap">
+        <svg class="lungs" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lungGradL" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#F3C9C2"/>
+              <stop offset="55%" stop-color="#E8B7B0"/>
+              <stop offset="100%" stop-color="#C98A99"/>
+            </linearGradient>
+            <linearGradient id="lungGradR" x1="1" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F3C9C2"/>
+              <stop offset="55%" stop-color="#E8B7B0"/>
+              <stop offset="100%" stop-color="#C98A99"/>
+            </linearGradient>
+          </defs>
+          <path d="M96 40 C70 40 50 65 45 100 C41 128 48 158 66 168 C78 175 88 165 90 148 L92 60 Z" fill="url(#lungGradL)" opacity="0.92"/>
+          <path d="M104 40 C130 40 150 65 155 100 C159 128 152 158 134 168 C122 175 112 165 110 148 L108 60 Z" fill="url(#lungGradR)" opacity="0.92"/>
+          <path d="M96 30 C98 20 102 20 104 30 L104 55 L96 55 Z" fill="#C98A99" opacity="0.85"/>
+        </svg>
+      </div>
+      <p class="instruction" id="breathInstruction">Tap and hold the screen.<br><em>Take a deep breath.</em></p>
+      <p class="reveal-text" id="breathReveal">Just take my hand,<br>we'll fly.</p>
+    </section>
+
+    <section class="snap" id="s-poem">
+      <p class="poem">You are the quiet after the storm,
+the hush I didn't know I was praying for.
+
+Some loves arrive like weather —
+loud, insistent, gone by morning.
+Yours arrived like breath:
+so close I forgot to notice it was there,
+until I imagined a life without it
+and found I couldn't breathe at all.
+
+So take my hand.
+Not to lead you somewhere,
+but because there is nowhere
+I'd rather be led.</p>
+      <div class="scroll-hint">scroll<div class="chev"></div></div>
+    </section>
+
+    <section class="snap" id="s-hands">
+      <div class="hands-wrap">
+        <div class="heart-glow"></div>
+        <svg class="hand hand-left" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="handGradL" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#F3C9C2"/>
+              <stop offset="100%" stop-color="#C98A99"/>
+            </linearGradient>
+          </defs>
+          <g fill="url(#handGradL)">
+            <rect x="30" y="55" width="60" height="80" rx="26"/>
+            <rect x="18" y="18" width="18" height="55" rx="9"/>
+            <rect x="40" y="6" width="18" height="62" rx="9"/>
+            <rect x="62" y="10" width="18" height="58" rx="9"/>
+            <rect x="82" y="26" width="18" height="50" rx="9"/>
+          </g>
+        </svg>
+        <svg class="hand hand-right" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="handGradR" x1="1" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F3C9C2"/>
+              <stop offset="100%" stop-color="#C98A99"/>
+            </linearGradient>
+          </defs>
+          <g fill="url(#handGradR)">
+            <rect x="30" y="55" width="60" height="80" rx="26"/>
+            <rect x="18" y="18" width="18" height="55" rx="9"/>
+            <rect x="40" y="6" width="18" height="62" rx="9"/>
+            <rect x="62" y="10" width="18" height="58" rx="9"/>
+            <rect x="82" y="26" width="18" height="50" rx="9"/>
+          </g>
+        </svg>
+      </div>
+      <p class="final-text">Just take my hand, we'll fly.</p>
+      <p class="sub-text">forever close, my dove.</p>
+    </section>
+
+  </main>
+
+  <audio id="song" src="assets/jupiter-island.mp3" loop preload="none"></audio>
+  <button id="soundToggle" aria-label="Toggle music">♪</button>
+
+<script>
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Petals ---------- */
+  var petalField = document.getElementById('petals');
+
+  function frangipaniSVG(){
+    return '<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">' +
+      '<defs><radialGradient id="pg" cx="50%" cy="50%" r="60%">' +
+      '<stop offset="0%" stop-color="#FFF7ED"/>' +
+      '<stop offset="55%" stop-color="#F3D2C7"/>' +
+      '<stop offset="100%" stop-color="#E8B7B0"/>' +
+      '</radialGradient></defs>' +
+      '<g transform="translate(50,50)">' +
+      [0,72,144,216,288].map(function(a){
+        return '<ellipse cx="0" cy="-22" rx="9" ry="20" fill="url(#pg)" transform="rotate(' + a + ')"/>';
+      }).join('') +
+      '<circle r="6" fill="#D8AD6D"/>' +
+      '</g></svg>';
+  }
+
+  function spawnPetal(){
+    var p = document.createElement('div');
+    p.className = 'petal';
+    var size = 16 + Math.random()*20;
+    var duration = reduceMotion ? 20 : (9 + Math.random()*7);
+    p.style.setProperty('--x', (Math.random()*100) + 'vw');
+    p.style.setProperty('--size', size + 'px');
+    p.style.setProperty('--duration', duration + 's');
+    p.style.setProperty('--delay', '0s');
+    p.style.setProperty('--drift', (Math.random()*140 - 70) + 'px');
+    p.style.setProperty('--rotate', (Math.random()*360 + 180) + 'deg');
+    p.innerHTML = frangipaniSVG();
+    petalField.appendChild(p);
+    setTimeout(function(){ p.remove(); }, duration*1000 + 200);
+  }
+
+  var petalInterval = setInterval(spawnPetal, reduceMotion ? 2600 : 750);
+  for (var i=0;i<6;i++){ setTimeout(spawnPetal, i*300); }
+
+  /* ---------- Name gate ---------- */
+  var VALID = ['sheza','sheja','sheza sarker'];
+  var gate = document.getElementById('gate');
+  var story = document.getElementById('story');
+  var form = document.getElementById('nameForm');
+  var input = document.getElementById('nameInput');
+  var msg = document.getElementById('gateMsg');
+  var card = document.querySelector('.gate-card');
+
+  function normalize(s){
+    return s.trim().toLowerCase().replace(/\s+/g,' ');
+  }
+
+  function enterSite(){
+    gate.classList.add('fade-out');
+    story.classList.remove('hidden');
+    try{ sessionStorage.setItem('dove_ok','1'); }catch(e){}
+    setTimeout(function(){ gate.style.display='none'; }, 1050);
+  }
+
+  if (sessionStorage && sessionStorage.getItem('dove_ok') === '1'){
+    gate.style.display='none';
+    story.classList.remove('hidden');
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var val = normalize(input.value);
+    if (VALID.indexOf(val) !== -1){
+      msg.textContent = '';
+      enterSite();
+    } else {
+      msg.textContent = 'Try again, my love — I know your name.';
+      card.classList.remove('shake');
+      void card.offsetWidth;
+      card.classList.add('shake');
+    }
+  });
+
+  /* ---------- Breath / lungs ---------- */
+  var breathSection = document.getElementById('s-breath');
+  var lungs = document.querySelector('.lungs');
+  var instruction = document.getElementById('breathInstruction');
+  var reveal = document.getElementById('breathReveal');
+  var song = document.getElementById('song');
+  var soundToggle = document.getElementById('soundToggle');
+
+  var HOLD_MS = 3200;
+  var holding = false;
+  var startTime = 0;
+  var completed = false;
+  var rafId = null;
+
+  function frame(now){
+    if (!holding) return;
+    var elapsed = now - startTime;
+    var progress = Math.min(elapsed / HOLD_MS, 1);
+    var scale = 1 + progress * 0.85;
+    lungs.style.transform = 'scale(' + scale + ')';
+    if (progress >= 1 && !completed){
+      completed = true;
+      finishBreath();
+      return;
+    }
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function finishBreath(){
+    instruction.classList.add('done');
+    reveal.classList.add('show');
+    song.play().catch(function(){});
+    soundToggle.classList.add('show');
+  }
+
+  function beginHold(e){
+    if (completed) return;
+    holding = true;
+    startTime = performance.now();
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function endHold(){
+    if (completed) return;
+    holding = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    lungs.style.transition = 'transform .8s ease';
+    lungs.style.transform = 'scale(1)';
+    setTimeout(function(){ lungs.style.transition = ''; }, 850);
+  }
+
+  breathSection.addEventListener('pointerdown', beginHold);
+  breathSection.addEventListener('pointerup', endHold);
+  breathSection.addEventListener('pointercancel', endHold);
+  breathSection.addEventListener('pointerleave', endHold);
+
+  soundToggle.addEventListener('click', function(){
+    if (song.paused){ song.play().catch(function(){}); soundToggle.textContent = '♪'; }
+    else { song.pause(); soundToggle.textContent = '⏸'; }
+  });
+
+  /* ---------- Hands reveal ---------- */
+  var handsSection = document.getElementById('s-hands');
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) handsSection.classList.add('in-view');
+    });
+  }, { threshold: 0.5 });
+  io.observe(handsSection);
+
+})();
+</script>
+</body>
+</html>
